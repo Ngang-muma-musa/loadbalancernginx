@@ -1,0 +1,59 @@
+version: "3.3"
+volumes:
+  node-red-data:
+    driver: local
+services:
+  load-balancer:
+    container_name: load-balancer
+    image: nginx:latest
+    networks:
+      - loadbalancer_network
+    volumes:
+      - ./nginx/nginx-dev-lb.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - temp-sensor-1
+      - temp-sensor-2
+    ports:
+      - "80:80"
+  temp-sensor-1:
+    container_name: temp-sensor-1
+    image: nodered/node-red:latest
+    networks:
+      - loadbalancer_network
+    environment:
+      - TZ=Europe/Amsterdam
+      - SERVER_NAME=server-1
+    volumes:
+      - ./temperature-service/nodered:/data
+    ports:
+      - 1880:1880
+
+  temp-sensor-2:
+    container_name: temp-sensor-2
+    image: nodered/node-red:latest
+    networks:
+      - loadbalancer_network
+    environment:
+      - TZ=Europe/Amsterdam
+      - SERVER_NAME=server-2
+    volumes:
+      - ./temperature-service/nodered:/data
+    ports:
+      - 1881:1880
+
+  temp-sensor-3:
+    container_name: temp-sensor-3
+    image: nodered/node-red:latest
+    networks:
+      - loadbalancer_network
+    environment:
+      - TZ=Europe/Amsterdam
+      - SERVER_NAME=server-3
+    volumes:
+      - ./temperature-service/nodered:/data
+    ports:
+      - 1882:1880
+
+networks:
+  loadbalancer_network:
+    driver: bridge

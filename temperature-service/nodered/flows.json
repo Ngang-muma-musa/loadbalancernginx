@@ -1,0 +1,118 @@
+[
+    {
+        "id": "05c1173f055820d3",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "d350811018835f56",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "e1fb209f5285b3d6",
+        "type": "http response",
+        "z": "d350811018835f56",
+        "name": "",
+        "statusCode": "200",
+        "headers": {
+            "content-type": "application/json"
+        },
+        "x": 640,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "137142faf6a871e4",
+        "type": "function",
+        "z": "d350811018835f56",
+        "name": "function 1",
+        "func": "msg.payload = {\n    temperature: (Math.random() * (35 - 20) + 20).toFixed(1),\n    unit: \"Celsius\",\n    server: env.get(\"SERVER_NAME\") || \"default-server\"\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 60,
+        "wires": [
+            [
+                "e1fb209f5285b3d6"
+            ]
+        ]
+    },
+    {
+        "id": "41c7b86c21410a39",
+        "type": "http in",
+        "z": "d350811018835f56",
+        "name": "",
+        "url": "/api/temperature",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 60,
+        "wires": [
+            [
+                "137142faf6a871e4"
+            ]
+        ]
+    },
+    {
+        "id": "956c93c1720e105e",
+        "type": "http in",
+        "z": "d350811018835f56",
+        "name": "",
+        "url": "/api/health",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 180,
+        "wires": [
+            [
+                "bb8e4814134a8616"
+            ]
+        ]
+    },
+    {
+        "id": "bb8e4814134a8616",
+        "type": "function",
+        "z": "d350811018835f56",
+        "name": "function 2",
+        "func": "msg.payload = {\n    status: \"ok\",\n    server: env.get(\"SERVER_NAME\") || \"default-server\"\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 180,
+        "wires": [
+            [
+                "e17bdca340c3e83f"
+            ]
+        ]
+    },
+    {
+        "id": "e17bdca340c3e83f",
+        "type": "http response",
+        "z": "d350811018835f56",
+        "name": "",
+        "statusCode": "200",
+        "headers": {
+            "content-type": "application/json"
+        },
+        "x": 640,
+        "y": 180,
+        "wires": []
+    }
+]
